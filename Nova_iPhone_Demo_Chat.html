@@ -1,0 +1,216 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0e1017"><title>Nova — прототип</title><style>
+:root{--bg:#0e1017;--p:#191c27;--p2:#252938;--t:#f6f5fb;--m:#9699aa;--a:#9b87ff;--g:#54d99a;--r:#fa626f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px -apple-system,BlinkMacSystemFont,sans-serif}.app{max-width:520px;margin:auto;min-height:100dvh;padding-bottom:90px}button{font:inherit;color:inherit;border:0;cursor:pointer}.head{display:flex;align-items:center;gap:12px;padding:20px}.logo{width:46px;height:46px;border-radius:16px;background:linear-gradient(140deg,#b1a1ff,#6d5be1);display:grid;place-items:center;font-size:27px}.brand{font-size:26px;font-weight:800}.muted{color:var(--m);font-size:12px}.add{margin-left:auto;width:42px;height:42px;border-radius:50%;background:var(--p);font-size:24px}main{padding:0 18px}.screen{display:none}.screen.active{display:block}.hero{padding:20px;border-radius:24px;background:radial-gradient(ellipse at 100% 0%,#53408066,transparent 60%),linear-gradient(140deg,#1c1e2b,#151720);border:1px solid #2a2b3b}.hero h1{font-size:26px;line-height:1.12;margin:0 0 10px}.hero p{font-size:14px;color:#b9bac8;line-height:1.5;margin:0}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}.chip{font-size:11px;padding:7px 10px;border-radius:99px;background:#ffffff0c;color:#d8d3f5}.headrow{display:flex;justify-content:space-between;align-items:center;margin:25px 2px 12px}.headrow h2{font-size:18px;margin:0}.room{display:flex;align-items:center;gap:12px;background:var(--p);border:1px solid #ffffff08;border-radius:20px;padding:14px;margin-bottom:10px}.ri{width:52px;height:52px;flex:none;border-radius:16px;background:#9b87ff22;color:var(--a);display:grid;place-items:center;font-size:26px}.ri.blue{background:#4ec8ef20;color:#65d9ff}.rt{font-weight:700;font-size:15px}.rs{font-size:12px;color:var(--m);margin-top:5px}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--g);margin-right:5px}.join{margin-left:auto;border-radius:12px;padding:10px 12px;background:#9b87ff24;color:#c8bdff;font-size:12px;font-weight:700}.community{display:flex;align-items:center;gap:12px;padding:13px 3px;border-bottom:1px solid #ffffff0c}.ci{width:43px;height:43px;border-radius:14px;background:#28283a;display:grid;place-items:center;font-size:20px}.ct{font-size:14px;font-weight:700}.bottom{position:fixed;z-index:3;bottom:0;left:0;right:0;max-width:520px;margin:auto;background:#11131cf2;backdrop-filter:blur(20px);border-top:1px solid #ffffff0d;display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom))}.tab{background:transparent;color:var(--m);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:70px}.tab b{font-size:21px}.tab.active{color:var(--a)}.chat{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid #ffffff0c}.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#8971dc,#39486d);display:grid;place-items:center;font-weight:800}.chatname{font-size:14px;font-weight:700}.chatmsg{font-size:12px;color:var(--m);margin-top:5px}.profile{text-align:center;padding-top:25px}.profile .avatar{width:92px;height:92px;margin:auto auto 16px;font-size:30px}.settings{margin-top:24px;text-align:left;background:var(--p);border-radius:20px;overflow:hidden}.setting{padding:17px;border-bottom:1px solid #ffffff0c;font-size:14px}
+/* Local chat prototype */
+.chatlist{margin-top:8px}
+.chat{cursor:pointer;gap:12px;position:relative}
+.chat:active{opacity:.78}
+.chatmeta{margin-left:auto;align-self:flex-start;color:var(--m);font-size:10px;white-space:nowrap}
+.chatpreview{min-width:0;flex:1}
+.chatpreview .chatmsg{max-width:245px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chatunread{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--a);color:#171321;font-size:10px;font-weight:800;margin-left:5px}
+.chatsearch{width:100%;background:var(--p);border:1px solid #ffffff08;border-radius:18px;color:var(--t);padding:15px 16px;font:inherit;outline:none}
+.chatsearch::placeholder{color:var(--m)}
+.chat-head{display:flex;align-items:center;gap:12px;padding:12px 0 18px;border-bottom:1px solid #ffffff10}
+.chat-back{width:38px;height:38px;border-radius:50%;background:var(--p2);font-size:20px;flex:none}
+.chat-head .avatar{width:42px;height:42px;flex:none}
+.chat-peer{font-weight:800;font-size:15px}
+.chat-status{font-size:11px;color:var(--g);margin-top:3px}
+.conversation{display:none;position:fixed;z-index:8;inset:0;max-width:520px;margin:auto;background:var(--bg);padding:calc(14px + env(safe-area-inset-top)) 18px calc(92px + env(safe-area-inset-bottom));flex-direction:column}
+.conversation.open{display:flex}
+.message-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:18px 0}
+.day-label{text-align:center;color:var(--m);font-size:10px;margin:4px 0 8px}
+.bubble-row{display:flex;flex-direction:column;max-width:82%;align-self:flex-start;gap:4px}
+.bubble-row.mine{align-self:flex-end;align-items:flex-end}
+.bubble{padding:11px 13px;border-radius:17px 17px 17px 5px;background:var(--p2);font-size:14px;line-height:1.4;overflow-wrap:anywhere;white-space:pre-wrap}
+.mine .bubble{background:#51427f;border-radius:17px 17px 5px 17px}
+.message-time{font-size:9px;color:var(--m);padding:0 4px}
+.chat-compose{display:flex;align-items:flex-end;gap:8px;padding:10px;background:var(--p);border:1px solid #ffffff10;border-radius:20px;margin-top:10px}
+.chat-compose textarea{flex:1;resize:none;max-height:110px;min-height:24px;background:transparent;border:0;outline:none;color:var(--t);font:14px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;padding:7px 3px}
+.chat-compose textarea::placeholder{color:var(--m)}
+.send-btn{width:40px;height:40px;flex:none;border-radius:14px;background:var(--a);color:#181522;font-size:19px;font-weight:800}
+.send-btn:disabled{opacity:.4}
+.chat-empty{text-align:center;color:var(--m);font-size:12px;line-height:1.5;margin:auto;padding:25px}
+.newchat{background:var(--p);color:var(--a);border-radius:12px;padding:9px 12px;font-size:12px}
+.voice{display:none;position:fixed;z-index:10;inset:0;max-width:520px;margin:auto;background:radial-gradient(ellipse at 50% 12%,#49336a66,transparent 42%),var(--bg);padding:calc(20px + env(safe-area-inset-top)) 20px calc(18px + env(safe-area-inset-bottom));flex-direction:column}.voice.open{display:flex}.vtop{display:flex;align-items:center;justify-content:space-between}.circle{width:44px;height:44px;border-radius:50%;background:var(--p2);font-size:20px}.vtitle{text-align:center}.vtitle small{font-size:10px;letter-spacing:1.4px;color:var(--m)}.vtitle h2{margin:6px 0 0;font-size:21px}.count{text-align:center;color:var(--m);font-size:12px;margin-top:12px}.people{display:grid;grid-template-columns:1fr 1fr;gap:30px 18px;margin:auto 0}.person{text-align:center}.face{width:min(29vw,110px);height:min(29vw,110px);margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;font-size:34px;font-weight:800;background:linear-gradient(135deg,#8270c4,#3c466f);border:3px solid transparent}.face.talk{border-color:var(--g);box-shadow:0 0 0 5px #54d99a18}.pn{font-size:14px;font-weight:700}.ps{font-size:11px;color:var(--m);margin-top:5px}.controls{background:var(--p);border:1px solid #ffffff0c;border-radius:25px;padding:17px 12px 14px}.crow{display:flex;justify-content:space-around;margin-bottom:19px}.control{display:flex;flex-direction:column;align-items:center;gap:8px;background:transparent;color:var(--m);font-size:10px}.ico{width:55px;height:55px;border-radius:50%;background:#292d3c;color:white;display:grid;place-items:center;font-size:21px}.control.on .ico{background:#9b87ff3b;color:#d2c9ff}.leave{width:100%;padding:16px;border-radius:16px;background:var(--r);font-weight:800}.note{text-align:center;color:var(--m);font-size:11px;line-height:1.45;margin-top:12px}.toast{display:none;position:fixed;z-index:30;bottom:92px;left:50%;transform:translateX(-50%);background:#292d3c;border:1px solid #ffffff18;border-radius:14px;padding:12px 16px;font-size:12px;max-width:90%;text-align:center}.toast.show{display:block}
+</style></head><body><div class="app"><header class="head"><div class="logo">✦</div><div><div class="brand">Nova</div><div class="muted">Твой голос. Твои люди.</div></div><button class="add" id="invite">＋</button></header><main>
+<section class="screen active" id="rooms"><div class="hero"><h1>Меньше текста.<br>Больше живого общения.</h1><p>Залетай в голосовую, когда захочешь. Твои люди уже рядом.</p><div class="chips"><span class="chip">✦ Голосовые комнаты</span><span class="chip">◉ Сообщества</span><span class="chip">⌁ Просто и уютно</span></div></div>
+<div class="headrow"><h2>Голосовые комнаты</h2><span class="muted">2 комнаты</span></div>
+<div class="room"><div class="ri">≋</div><div><div class="rt">Общение</div><div class="rs"><span class="dot"></span>3 человека в голосе</div></div><button class="join" data-room="Общение">Войти ↗</button></div>
+<div class="room"><div class="ri blue">♧</div><div><div class="rt">Игровая</div><div class="rs"><span class="dot"></span>2 человека · свободно</div></div><button class="join" data-room="Игровая">Войти ↗</button></div>
+<div class="headrow"><h2>Твои сообщества</h2><button id="create" style="background:transparent;color:var(--a);font-size:12px">＋ Создать</button></div>
+<div class="community"><div class="ci">✦</div><div><div class="ct">Друзья</div><div class="rs">Общий сервер</div></div></div><div class="community"><div class="ci">🎮</div><div><div class="ct">Игры</div><div class="rs">Обсуждения и поиск команды</div></div></div><div class="community"><div class="ci">♫</div><div><div class="ct">Музыка</div><div class="rs">Слушаем вместе</div></div></div><p class="note">Концепт 0.2 · голос пока демонстрационный</p></section>
+<section class="screen" id="chats"><div class="headrow"><h2 style="font-size:26px">Сообщения</h2><button class="newchat" id="newChat">＋ Новый чат</button></div><input class="chatsearch" id="chatSearch" type="search" placeholder="⌕  Поиск диалогов" autocomplete="off"><div class="chatlist" id="chatList"></div><p class="note">Локальный прототип · сообщения сохраняются только в этом браузере.</p></section>
+<section class="screen" id="profile"><div class="profile"><div class="avatar">N</div><h2>Твой профиль</h2><p class="muted">@nova_user · 🟢 В сети</p><div class="settings"><div class="setting">♙　Настройки аккаунта　›</div><div class="setting">♩　Аудио и микрофон　›</div><div class="setting">♧　Приватность　›</div><div class="setting">♧　Уведомления　›</div></div><p class="note">Nova · Концепт 0.2</p></div></section></main>
+<nav class="bottom"><button class="tab active" data-tab="rooms"><b>≋</b>Комнаты</button><button class="tab" data-tab="chats"><b>▤</b>Чаты</button><button class="tab" data-tab="profile"><b>◉</b>Профиль</button></nav></div>
+
+<div class="conversation" id="conversation" aria-hidden="true">
+  <div class="chat-head">
+    <button class="chat-back" id="chatBack" aria-label="Назад">‹</button>
+    <div class="avatar" id="conversationAvatar">M</div>
+    <div style="min-width:0;flex:1"><div class="chat-peer" id="conversationName">Mira</div><div class="chat-status">Личный чат · локально</div></div>
+    <button class="circle" id="chatOptions" aria-label="Действия">⋯</button>
+  </div>
+  <div class="message-list" id="messageList" aria-live="polite"></div>
+  <form class="chat-compose" id="chatForm">
+    <textarea id="messageInput" rows="1" maxlength="2000" placeholder="Написать сообщение…" aria-label="Текст сообщения"></textarea>
+    <button class="send-btn" id="sendMessage" type="submit" aria-label="Отправить" disabled>➤</button>
+  </form>
+</div>
+<div class="voice" id="voice"><div class="vtop"><button class="circle" id="close">⌄</button><div class="vtitle"><small>ГОЛОСОВАЯ КОМНАТА</small><h2 id="roomName">Общение</h2></div><button class="circle" id="invite2">＋</button></div><div class="count">●　Демо-комната · 4 участника</div><div class="people"><div class="person"><div class="face talk">A</div><div class="pn">Alex</div><div class="ps">Говорит…</div></div><div class="person"><div class="face">M</div><div class="pn">Mira</div><div class="ps">В комнате</div></div><div class="person"><div class="face">S</div><div class="pn">Sam</div><div class="ps">В комнате</div></div><div class="person"><div class="face" style="background:linear-gradient(135deg,#9a86ff,#4b3c82)">Y</div><div class="pn">Ты</div><div class="ps" id="micstatus">Микрофон включён (демо)</div></div></div><div class="controls"><div class="crow"><button class="control on" id="mic"><span class="ico">♩</span><span id="miclabel">Микрофон</span></button><button class="control on" id="sound"><span class="ico">◖))</span><span id="soundlabel">Звук</span></button><button class="control" id="invite3"><span class="ico">＋</span>Пригласить</button></div><button class="leave" id="leave">↙　Покинуть комнату</button><div class="note">Это визуальная демонстрация. Настоящая аудиосвязь ещё не подключена.</div></div></div><div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);let tm,mic=true,sound=true;function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(tm);tm=setTimeout(()=>$('toast').classList.remove('show'),2300)}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});
+document.querySelectorAll('[data-room]').forEach(b=>b.onclick=()=>{$('roomName').textContent=b.dataset.room;$('voice').classList.add('open')});function close(){ $('voice').classList.remove('open') }$('close').onclick=close;$('leave').onclick=()=>{close();toast('Ты вышел из демо-комнаты')};
+$('mic').onclick=()=>{mic=!mic;$('mic').classList.toggle('on',mic);$('miclabel').textContent=mic?'Микрофон':'Выключен';$('micstatus').textContent=mic?'Микрофон включён (демо)':'Микрофон выключен (демо)';toast(mic?'Микрофон включён в интерфейсе':'Микрофон выключен в интерфейсе')};
+$('sound').onclick=()=>{sound=!sound;$('sound').classList.toggle('on',sound);$('soundlabel').textContent=sound?'Звук':'Без звука';toast(sound?'Звук включён в интерфейсе':'Звук выключен в интерфейсе')};
+['invite','invite2','invite3'].forEach(id=>$(id).onclick=()=>toast('Приглашения появятся в следующей версии Nova'));$('create').onclick=()=>toast('Создание сообществ добавим следующим этапом');
+
+// Local-only messaging prototype. Nothing is sent to a server or another person.
+const CHAT_STORAGE_KEY = 'nova_local_chat_v1';
+const chatSeed = [
+  {id:'mira', name:'Mira', avatar:'M', color:'', messages:[{from:'them', text:'Зайдёшь сегодня в голос?', time:Date.now()-3600000}]},
+  {id:'alex', name:'Alex', avatar:'A', messages:[{from:'them', text:'Отправил тебе приглашение', time:Date.now()-7200000}]},
+  {id:'sam', name:'Sam', avatar:'S', messages:[{from:'them', text:'Спасибо за вечер! ✨', time:Date.now()-86400000}]}
+];
+let chats = loadChats();
+let activeChatId = null;
+
+function loadChats(){
+  try {
+    const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+    if(saved) return JSON.parse(saved);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(chatSeed));
+}
+function saveChats(){
+  try { localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats)); }
+  catch(e) { toast('Не удалось сохранить историю в этом браузере'); }
+}
+function formatTime(value){
+  return new Date(value).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+}
+function lastMessage(chat){
+  return chat.messages && chat.messages.length ? chat.messages[chat.messages.length-1] : null;
+}
+function renderChatList(){
+  const list = $('chatList');
+  if(!list) return;
+  const query = ($('chatSearch').value || '').trim().toLowerCase();
+  const sorted = [...chats].sort((a,b)=>(lastMessage(b)?.time||0)-(lastMessage(a)?.time||0));
+  const visible = sorted.filter(c => c.name.toLowerCase().includes(query) || (lastMessage(c)?.text||'').toLowerCase().includes(query));
+  list.innerHTML = '';
+  if(!visible.length){
+    list.innerHTML = '<div class="chat-empty">Ничего не найдено.<br>Попробуй другое имя или создай новый чат.</div>';
+    return;
+  }
+  visible.forEach(chat=>{
+    const last = lastMessage(chat);
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'chat';
+    row.style.width = '100%';
+    row.style.textAlign = 'left';
+    row.style.background = 'transparent';
+    row.innerHTML = `<div class="avatar">${escapeHTML(chat.avatar || chat.name.slice(0,1).toUpperCase())}</div><div class="chatpreview"><div class="chatname">${escapeHTML(chat.name)}</div><div class="chatmsg">${last ? (last.from==='me'?'Ты: ':'')+escapeHTML(last.text) : 'Начни переписку'}</div></div><div class="chatmeta">${last ? formatTime(last.time) : ''}</div>`;
+    row.addEventListener('click',()=>openConversation(chat.id));
+    list.appendChild(row);
+  });
+}
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function renderMessages(){
+  const chat = chats.find(c=>c.id===activeChatId);
+  if(!chat) return;
+  $('conversationName').textContent = chat.name;
+  $('conversationAvatar').textContent = chat.avatar || chat.name.slice(0,1).toUpperCase();
+  const list = $('messageList');
+  list.innerHTML = '<div class="day-label">История на этом устройстве</div>';
+  if(!chat.messages.length){
+    const empty = document.createElement('div');
+    empty.className = 'chat-empty';
+    empty.textContent = 'Пока нет сообщений. Напиши первым 💜';
+    list.appendChild(empty);
+  } else {
+    chat.messages.forEach(message=>{
+      const row = document.createElement('div');
+      row.className = 'bubble-row'+(message.from==='me'?' mine':'');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = message.text;
+      const time = document.createElement('div');
+      time.className = 'message-time';
+      time.textContent = formatTime(message.time)+(message.from==='me'?' · отправлено':'');
+      row.append(bubble,time);
+      list.appendChild(row);
+    });
+  }
+  requestAnimationFrame(()=>{list.scrollTop=list.scrollHeight;});
+}
+function openConversation(id){
+  activeChatId=id;
+  renderMessages();
+  $('conversation').classList.add('open');
+  $('conversation').setAttribute('aria-hidden','false');
+  setTimeout(()=>$('messageInput').focus({preventScroll:true}),120);
+}
+function closeConversation(){
+  $('conversation').classList.remove('open');
+  $('conversation').setAttribute('aria-hidden','true');
+  activeChatId=null;
+  renderChatList();
+}
+$('chatBack').addEventListener('click',closeConversation);
+$('chatSearch').addEventListener('input',renderChatList);
+$('messageInput').addEventListener('input',()=>{
+  $('sendMessage').disabled = !$('messageInput').value.trim();
+  $('messageInput').style.height='auto';
+  $('messageInput').style.height=Math.min($('messageInput').scrollHeight,110)+'px';
+});
+$('messageInput').addEventListener('keydown',event=>{
+  if(event.key==='Enter' && !event.shiftKey){
+    event.preventDefault();
+    $('chatForm').requestSubmit();
+  }
+});
+$('chatForm').addEventListener('submit',event=>{
+  event.preventDefault();
+  const text = $('messageInput').value.trim();
+  const chat = chats.find(c=>c.id===activeChatId);
+  if(!text || !chat) return;
+  chat.messages.push({from:'me',text,time:Date.now()});
+  saveChats();
+  $('messageInput').value='';
+  $('messageInput').style.height='auto';
+  $('sendMessage').disabled=true;
+  renderMessages();
+  renderChatList();
+});
+$('newChat').addEventListener('click',()=>{
+  const name = prompt('Имя собеседника для локального чата:');
+  if(name===null) return;
+  const clean = name.trim();
+  if(!clean){toast('Введи имя для нового чата');return;}
+  let chat = chats.find(c=>c.name.toLowerCase()===clean.toLowerCase());
+  if(!chat){
+    chat={id:'local-'+Date.now(),name:clean,avatar:clean.slice(0,1).toUpperCase(),messages:[]};
+    chats.push(chat);
+    saveChats();
+  }
+  renderChatList();
+  openConversation(chat.id);
+});
+$('chatOptions').addEventListener('click',()=>{
+  if(!activeChatId) return;
+  const chat = chats.find(c=>c.id===activeChatId);
+  if(!chat) return;
+  if(confirm('Очистить историю этого чата на этом устройстве?')){
+    chat.messages=[];
+    saveChats();
+    renderMessages();
+    renderChatList();
+  }
+});
+renderChatList();
+
+</script></body></html>
