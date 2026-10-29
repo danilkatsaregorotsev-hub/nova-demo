@@ -215,5 +215,13 @@ renderChatList();
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</body>
+<script>
+const SUPABASE_URL = 'https://vmzckzflanmyawrixvuz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Ux5xGFf2M19PcqRmYnHRZQ_00QEGPo-';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script></body>
 </html>
