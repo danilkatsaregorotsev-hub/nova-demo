@@ -223,5 +223,95 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-</script></body>
+</script>
+<script>
+const authBox = document.createElement('div');
+authBox.id = 'nova-auth-box';
+authBox.style.cssText = 'position:fixed;right:16px;bottom:90px;z-index:9999;background:#172554;color:white;padding:18px;border-radius:18px;width:280px;box-shadow:0 8px 30px #0006;font:14px Arial;display:none';
+
+authBox.innerHTML = `
+  <h3 style="margin:0 0 12px">Nova — аккаунт</h3>
+  <input id="nova-email" type="email" placeholder="Email"
+    style="box-sizing:border-box;width:100%;padding:11px;margin-bottom:8px;border-radius:8px;border:0">
+  <input id="nova-password" type="password" placeholder="Пароль (минимум 6 символов)"
+    style="box-sizing:border-box;width:100%;padding:11px;margin-bottom:10px;border-radius:8px;border:0">
+  <button id="nova-signup" style="padding:10px;border:0;border-radius:8px;margin:2px">Регистрация</button>
+  <button id="nova-login" style="padding:10px;border:0;border-radius:8px;margin:2px">Войти</button>
+  <button id="nova-logout" style="padding:10px;border:0;border-radius:8px;margin:2px;display:none">Выйти</button>
+  <p id="nova-auth-status" style="overflow-wrap:anywhere"></p>
+  <button id="nova-auth-close" style="padding:7px;border:0;border-radius:8px">Закрыть</button>
+`;
+
+document.body.appendChild(authBox);
+
+const authToggle = document.createElement('button');
+authToggle.textContent = 'Войти / Регистрация';
+authToggle.style.cssText = 'position:fixed;right:16px;bottom:24px;z-index:9999;padding:12px 16px;border:0;border-radius:20px;background:#8b9cff;color:#101536;font-weight:bold';
+document.body.appendChild(authToggle);
+
+authToggle.onclick = () => {
+  authBox.style.display = authBox.style.display === 'none' ? 'block' : 'none';
+};
+
+document.getElementById('nova-auth-close').onclick = () => {
+  authBox.style.display = 'none';
+};
+
+async function novaAuth(action) {
+  const email = document.getElementById('nova-email').value.trim();
+  const password = document.getElementById('nova-password').value;
+  const status = document.getElementById('nova-auth-status');
+
+  if (!email || !password) {
+    status.textContent = 'Введи email и пароль.';
+    return;
+  }
+
+  status.textContent = 'Подожди...';
+
+  try {
+    const result = action === 'signup'
+      ? await supabaseClient.auth.signUp({ email, password })
+      : await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if (result.error) throw result.error;
+
+    status.textContent = action === 'signup'
+      ? 'Регистрация отправлена! Если требуется, подтверди email по ссылке из письма.'
+      : 'Вход выполнен!';
+
+    await updateNovaAuth();
+  } catch (error) {
+    status.textContent = 'Ошибка: ' + error.message;
+  }
+}
+
+document.getElementById('nova-signup').onclick = () => novaAuth('signup');
+document.getElementById('nova-login').onclick = () => novaAuth('login');
+
+async function updateNovaAuth() {
+  const { data } = await supabaseClient.auth.getSession();
+  const session = data.session;
+
+  document.getElementById('nova-logout').style.display =
+    session ? 'inline-block' : 'none';
+
+  if (session) {
+    document.getElementById('nova-auth-status').textContent =
+      'Вошли как ' + session.user.email;
+  }
+}
+
+document.getElementById('nova-logout').onclick = async () => {
+  const { error } = await supabaseClient.auth.signOut();
+  document.getElementById('nova-auth-status').textContent =
+    error ? error.message : 'Ты вышла из аккаунта.';
+  await updateNovaAuth();
+};
+
+updateNovaAuth();
+</script>
+</escape>
+
+</body>
 </html>
